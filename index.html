@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuba Broadband - Client Dashboard</title>
+    
+    <!-- Stylesheets -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f9fafb;
+            --sidebar-bg: #f2f3f5;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --accent-color: #f97316; /* Light orange accent color like Claude */
+            --accent-hover: #fb8c3c;
+            --border-color: #e5e7eb;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --logo-primary: #f97316;
+            --logo-secondary: #1e293b;
+        }
+
+        /* Dark mode variables */
+        .dark {
+            --primary-bg: #1a1b1e;
+            --secondary-bg: #262832;
+            --sidebar-bg: #1e2029;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles */
+        #sidebar {
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            height: 100vh;
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            transform: translateX(0);
+        }
+
+        #sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        /* Content styles */
+        #content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content.expanded {
+            margin-left: 0;
+        }
+
+        /* Client dropdown */
+        .client-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .client-dropdown.active {
+            max-height: 100px;
+        }
+
+        /* Toggle button animation */
+        .toggle-btn {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-btn.rotated {
+            transform: rotate(180deg);
+        }
+
+        /* Client item hover effect */
+        .client-item {
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .client-item:hover {
+            background-color: rgba(249, 115, 22, 0.1);
+            border-left-color: var(--accent-color);
+        }
+
+        /* Dropdown item hover effect */
+        .dropdown-item {
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(249, 115, 22, 0.1);
+        }
+
+        /* Section styles */
+        .section {
+            background-color: var(--secondary-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px var(--shadow-color);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        /* Table styles */
+        th {
+            border-bottom: 2px solid var(--accent-color);
+            background-color: rgba(249, 115, 22, 0.1);
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        /* Overlay for mobile */
+        #sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Horizontal navbar styles */
+        .horizontal-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .horizontal-nav-item {
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        .horizontal-nav-item:hover {
+            background-color: rgba(249, 115, 22, 0.1);
+        }
+
+        .horizontal-nav-item.active {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .horizontal-nav-item.active:after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        /* Mobile nav menu */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            z-index: 40;
+            min-width: 200px;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu-item {
+            padding: 0.75rem 1rem;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-menu-item:hover {
+            background-color: rgba(249, 115, 22, 0.1);
+        }
+
+        .mobile-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Client frame - Make sure it's full height */
+        #client-frame {
+            width: 100%;
+            flex: 1;
+            min-height: calc(100vh - 64px); /* Subtract header height */
+            border: none;
+        }
+
+        /* Print styles */
+        @media print {
+            @page {
+                size: letter;
+                margin: 1cm;
+            }
+
+            body {
+                width: 1440px !important;
+                margin: 0 auto !important;
+            }
+
+            #sidebar, #sidebar-overlay, #expand-btn, #theme-toggle, 
+            .no-print, .navbar-right, #mobile-nav-button {
+                display: none !important;
+            }
+            
+            #content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            #client-frame {
+                height: auto !important;
+                width: 1440px !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            #sidebar {
+                transform: translateX(-100%);
+                z-index: 100;
+            }
+            
+            #content {
+                margin-left: 0;
+            }
+            
+            #sidebar.expanded {
+                transform: translateX(0);
+            }
+
+            .horizontal-nav {
+                display: none;
+            }
+
+            .mobile-nav-toggle {
+                display: block;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .mobile-nav-toggle {
+                display: none;
+            }
+        }
+    </style>
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <!-- React and Recharts for interactive components -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.1.9/Recharts.min.js"></script>
+</head>
+<body>
+    <!-- Main container -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar overlay for mobile -->
+        <div id="sidebar-overlay" class="lg:hidden"></div>
+        
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <!-- Logo and company name -->
+            <div class="py-4 px-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="h-10 w-10 mr-3 rounded-md bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-sm">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 12H20M8 8H16M12 4V20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-semibold">Zuba Broadband</h1>
+                </div>
+                <button id="collapse-btn" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+
+            <!-- Clients list -->
+            <div class="py-2 overflow-y-auto" style="max-height: calc(100vh - 70px);">
+                <div class="px-4 py-2 text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">
+                    Clients
+                </div>
+
+                <!-- Client containers -->
+                <div id="client-containers">
+                    <!-- Client 1 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>OLD MUTUAL</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="old-mutual" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="old-mutual" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 2 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>VIRUNGA LODGE HP</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="virunga-lodge" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="virunga-lodge" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 3 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>BK HQ</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="bk-hq" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="bk-hq" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 4 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>MILLE COLLINES</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="mille-collines" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="mille-collines" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 5 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>AKAGERA AVIATION</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="akagera-aviation" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="akagera-aviation" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 6 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>PRIME INSURANCE HQ</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="prime-insurance" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="prime-insurance" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 7 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>BK</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="bk" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="bk" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 8 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>ROYAL FM</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="royal-fm" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="royal-fm" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 9 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>AVIPRO RWANDA</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="avipro-rwanda" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="avipro-rwanda" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client 10 -->
+                    <div class="client-container">
+                        <div class="client-item px-4 py-3 flex items-center justify-between cursor-pointer">
+                            <span>KIVU NOIR CAFE</span>
+                            <i class="fas fa-chevron-down text-xs toggle-btn"></i>
+                        </div>
+                        <div class="client-dropdown">
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="kivu-noir" data-page="profile">
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item py-2 cursor-pointer px-8" data-client="kivu-noir" data-page="quotation">
+                                <span>Quotation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div id="content" class="flex-1 flex flex-col">
+            <!-- Header -->
+            <div class="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700 flex items-center justify-between p-4 sticky top-0 z-30">
+                <div class="flex items-center">
+                    <button id="expand-btn" class="mr-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 id="page-title" class="text-xl font-semibold cursor-pointer">Dashboard</h2>
+                </div>
+                
+                <!-- Horizontal Navigation Bar (Desktop) -->
+                <div class="navbar-right flex items-center">
+                    <nav class="horizontal-nav hidden lg:flex mr-6">
+                        <a href="#client-info" class="horizontal-nav-item active">Client Info</a>
+                        <a href="#inventory" class="horizontal-nav-item">Inventory</a>
+                        <a href="#dashboards" class="horizontal-nav-item">Dashboards</a>
+                        <a href="#knowledgebase" class="horizontal-nav-item">Knowledgebase</a>
+                    </nav>
+                    
+                    <!-- Mobile Navigation Toggle -->
+                    <div class="relative lg:hidden mr-4">
+                        <button id="mobile-nav-toggle" class="mobile-nav-toggle px-3 py-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-md">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        
+                        <!-- Mobile Navigation Menu (Hidden by default) -->
+                        <div id="mobile-menu" class="mobile-menu">
+                            <a href="#client-info" class="mobile-menu-item block">Client Info</a>
+                            <a href="#inventory" class="mobile-menu-item block">Inventory</a>
+                            <a href="#dashboards" class="mobile-menu-item block">Dashboards</a>
+                            <a href="#knowledgebase" class="mobile-menu-item block">Knowledgebase</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Theme Toggle Button -->
+                    <button id="theme-toggle" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 rounded-full">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Client content area -->
+            <div id="content-area" class="p-6 overflow-y-auto flex-1">
+                <!-- Welcome dashboard -->
+                <div id="dashboard" class="dashboard-content">
+                    <div class="section p-6">
+                        <h2 class="text-2xl font-semibold mb-4">Welcome to Zuba Broadband Client Dashboard</h2>
+                        <p class="mb-4">Select a client from the sidebar to view their profile or quotation.</p>
+                        
+                        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-medium">Active Clients</h3>
+                                    <span id="total-clients" class="text-2xl font-bold text-orange-500">10</span>
+                                </div>
+                                <div class="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="bg-orange-500 h-1 rounded-full" style="width: 100%"></div>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                    <span id="active-clients">10</span> clients are currently active
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-medium">Monthly Revenue</h3>
+                                    <span id="monthly-revenue" class="text-2xl font-bold text-orange-500">9,325,000 RWF</span>
+                                </div>
+                                <div class="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="bg-orange-500 h-1 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                    Based on current active contracts
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-medium">Data Usage</h3>
+                                    <span id="avg-usage" class="text-2xl font-bold text-green-500">68%</span>
+                                </div>
+                                <div class="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="bg-green-500 h-1 rounded-full" style="width: 68%"></div>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                    Average usage across all clients
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Charts section -->
+                        <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Package distribution chart -->
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                                <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-4">Clients by Package</h3>
+                                <div id="package-chart" class="h-64 w-full">
+                                    <!-- Chart will be rendered here by charts.js -->
+                                </div>
+                            </div>
+                            
+                            <!-- Data usage chart -->
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                                <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-4">Top 5 Client Data Usage</h3>
+                                <div id="usage-chart" class="h-64 w-full">
+                                    <!-- Chart will be rendered here by charts.js -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent updates table -->
+                        <div class="mt-8 overflow-x-auto">
+                            <h3 class="text-xl font-semibold mb-4">Recent Updates</h3>
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Update Type</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>OLD MUTUAL</td>
+                                        <td>Bandwidth Upgrade</td>
+                                        <td>May 6, 2025</td>
+                                        <td><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>VIRUNGA LODGE HP</td>
+                                        <td>Hardware Maintenance</td>
+                                        <td>May 4, 2025</td>
+                                        <td><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>KIVU NOIR CAFE</td>
+                                        <td>Connection Issue</td>
+                                        <td>May 3, 2025</td>
+                                        <td><span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">In Progress</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BK HQ</td>
+                                        <td>Quotation Update</td>
+                                        <td>May 2, 2025</td>
+                                        <td><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Pending Approval</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Quick action buttons -->
+                        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <button class="flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Add New Client
+                            </button>
+                            
+                            <button class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Generate Reports
+                            </button>
+                            
+                            <button class="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                Schedule Maintenance
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Client iframe container -->
+                <iframe id="client-frame" class="w-full h-full border-none hidden"></iframe>
+            </div>
+        </div>
+
+        <!-- Mobile navigation button - always visible on mobile -->
+        <div id="mobile-nav-button" class="fixed bottom-4 right-4 lg:hidden bg-orange-500 text-white p-4 rounded-full shadow-lg z-50 cursor-pointer">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+
+    <!-- Simple inline JavaScript for essential functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Essential DOM elements
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const content = document.getElementById('content');
+            const collapseBtn = document.getElementById('collapse-btn');
+            const expandBtn = document.getElementById('expand-btn');
+            const mobileNavBtn = document.getElementById('mobile-nav-button');
+            const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const themeToggle = document.getElementById('theme-toggle');
+            const clientItems = document.querySelectorAll('.client-item');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            const pageTitle = document.getElementById('page-title');
+            const dashboard = document.getElementById('dashboard');
+            const clientFrame = document.getElementById('client-frame');
+            const horizontalNavItems = document.querySelectorAll('.horizontal-nav-item');
+            const mobileMenuItems = document.querySelectorAll('.mobile-menu-item');
+
+            // Function to toggle sidebar
+            function toggleSidebar(show) {
+                if (show) {
+                    sidebar.classList.remove('collapsed');
+                    sidebar.classList.add('expanded');
+                    sidebarOverlay.classList.add('active');
+                    if (window.innerWidth < 1024) {
+                        content.classList.add('expanded');
+                    }
+                } else {
+                    sidebar.classList.add('collapsed');
+                    sidebar.classList.remove('expanded');
+                    sidebarOverlay.classList.remove('active');
+                    content.classList.add('expanded');
+                }
+            }
+
+            // Sidebar toggle functionality
+            collapseBtn.addEventListener('click', function() {
+                toggleSidebar(false);
+            });
+
+            expandBtn.addEventListener('click', function() {
+                toggleSidebar(true);
+            });
+
+            // Mobile navigation button
+            if (mobileNavBtn) {
+                mobileNavBtn.addEventListener('click', function() {
+                    toggleSidebar(true);
+                });
+            }
+
+            // Mobile navigation toggle (horizontal nav)
+            if (mobileNavToggle && mobileMenu) {
+                mobileNavToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle('active');
+                });
+
+                // Close mobile menu when clicking elsewhere
+                document.addEventListener('click', function(e) {
+                    if (mobileMenu.classList.contains('active') && 
+                        !mobileMenu.contains(e.target) && 
+                        !mobileNavToggle.contains(e.target)) {
+                        mobileMenu.classList.remove('active');
+                    }
+                });
+            }
+
+            // Close sidebar when clicking overlay
+            sidebarOverlay.addEventListener('click', function() {
+                toggleSidebar(false);
+            });
+
+            // Theme toggle
+            themeToggle.addEventListener('click', function() {
+                document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            });
+
+            // Load saved theme preference
+            if (localStorage.getItem('theme') === 'dark' || 
+                (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+
+            // Client dropdown toggle
+            clientItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    const toggleBtn = this.querySelector('.toggle-btn');
+                    const dropdown = this.nextElementSibling;
+                    const isActive = dropdown.classList.contains('active');
+                    
+                    // Close all dropdowns
+                    document.querySelectorAll('.client-dropdown').forEach(function(dropdown) {
+                        dropdown.classList.remove('active');
+                    });
+                    
+                    document.querySelectorAll('.toggle-btn').forEach(function(btn) {
+                        btn.classList.remove('rotated');
+                    });
+                    
+                    // If this dropdown wasn't active, open it
+                    if (!isActive) {
+                        dropdown.classList.add('active');
+                        toggleBtn.classList.add('rotated');
+                    }
+                });
+            });
+
+            // Horizontal navigation active state
+            horizontalNavItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all items
+                    horizontalNavItems.forEach(function(navItem) {
+                        navItem.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Handle navigation logic here
+                    const target = this.getAttribute('href').substring(1);
+                    console.log(`Navigating to ${target}`);
+                });
+            });
+
+            // Mobile menu items
+            mobileMenuItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all items
+                    mobileMenuItems.forEach(function(navItem) {
+                        navItem.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Close mobile menu
+                    mobileMenu.classList.remove('active');
+                    
+                    // Handle navigation logic here
+                    const target = this.getAttribute('href').substring(1);
+                    console.log(`Navigating to ${target}`);
+                });
+            });
+
+            // Client page navigation
+            dropdownItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event from bubbling up to parent
+                    
+                    const client = this.getAttribute('data-client');
+                    const page = this.getAttribute('data-page');
+                    
+                    // Update page title
+                    const clientName = this.closest('.client-container').querySelector('.client-item span').textContent;
+                    pageTitle.textContent = `${clientName} - ${page.charAt(0).toUpperCase() + page.slice(1)}`;
+                    
+                    // Hide dashboard and show client frame
+                    dashboard.classList.add('hidden');
+                    clientFrame.classList.remove('hidden');
+                    
+                    // Load client page
+                    clientFrame.src = `clients/${client}/${page}.html`;
+                    
+                    // On mobile, collapse sidebar after selection
+                    if (window.innerWidth < 1024) {
+                        toggleSidebar(false);
+                    }
+                });
+            });
+
+            // Return to dashboard when clicking page title
+            pageTitle.addEventListener('click', function() {
+                if (pageTitle.textContent !== 'Dashboard') {
+                    pageTitle.textContent = 'Dashboard';
+                    clientFrame.classList.add('hidden');
+                    dashboard.classList.remove('hidden');
+                }
+            });
+
+            // Handle initial sidebar state based on screen size
+            function setInitialSidebarState() {
+                if (window.innerWidth < 1024) {
+                    toggleSidebar(false);
+                } else {
+                    toggleSidebar(true);
+                }
+            }
+
+            // Set initial state and listen for resize events
+            setInitialSidebarState();
+            window.addEventListener('resize', function() {
+                // Only reset the state if we cross the breakpoint boundary
+                const wasMobile = sidebar.classList.contains('collapsed');
+                const isMobile = window.innerWidth < 1024;
+                
+                if (wasMobile !== isMobile) {
+                    setInitialSidebarState();
+                }
+            });
+
+            // Print functionality for quotations with correct size
+            window.addEventListener('beforeprint', function() {
+                // If we're printing a quotation page, ensure it renders at desktop size
+                if (clientFrame && !clientFrame.classList.contains('hidden')) {
+                    document.body.style.width = '1440px';
+                }
+            });
+
+            window.addEventListener('afterprint', function() {
+                // Reset styles after printing
+                document.body.style.width = '';
+            });
+
+            // Initialize Mermaid diagrams if available
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+                    securityLevel: 'loose',
+                    flowchart: { useMaxWidth: true }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+/**
+ * Zuba Broadband Client Management System
+ * Print Stylesheet
+ */
+
+ @media print {
+    /* Hide elements that shouldn't be printed */
+    .sidebar,
+    .header,
+    #download-pdf,
+    #theme-toggle,
+    .no-print {
+        display: none !important;
+    }
+    
+    /* Reset layout for printing */
+    html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+        color: black;
+        font-size: 12pt;
+    }
+    
+    .content {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+    
+    .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 15px;
+    }
+    
+    /* Ensure proper page breaks */
+    .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: none;
+        margin-bottom: 20px;
+    }
+    
+    .section-title {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+    
+    /* Table adjustments for print */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th {
+        background-color: #f0f0f0 !important;
+        color: black !important;
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+    }
+    
+    /* Ensure all content is visible */
+    .grid-container {
+        display: block;
+    }
+    
+    .grid-item {
+        margin-bottom: 10px;
+    }
+    
+    /* URLs and links */
+    a {
+        color: #000;
+        text-decoration: none;
+    }
+    
+    /* Add URL after links except for navigation */
+    a[href]:not(.nav-link):after {
+        content: " (" attr(href) ")";
+        font-size: 90%;
+    }
+    
+    /* Print header on each page */
+    @page {
+        margin: 2cm;
+    }
+    
+    /* Footer with page numbers */
+    @page {
+        @bottom-right {
+            content: "Page " counter(page) " of " counter(pages);
+        }
+    }
+    
+    /* Logo adjustments for print */
+    .logo-container {
+        background: none;
+        box-shadow: none;
+    }
+    
+    /* Mermaid diagram adjustments */
+    .mermaid {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+    
+    /* Force background colors to print */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Ensure charts and graphs are visible */
+    .recharts-wrapper {
+        page-break-inside: avoid;
+    }
+}

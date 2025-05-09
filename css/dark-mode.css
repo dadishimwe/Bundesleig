@@ -1,0 +1,113 @@
+/**
+ * Zuba Broadband Client Management System
+ * Dark Mode Stylesheet
+ */
+
+ .dark {
+    /* Override base colors for dark mode */
+    --primary-bg: #1a1b1e;
+    --secondary-bg: #262832;
+    --sidebar-bg: #1e2029;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --border-color: #374151;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    
+    /* Status colors - adjusted for dark mode */
+    --status-active: #10b981;
+    --status-warning: #f59e0b;
+    --status-inactive: #ef4444;
+}
+
+/* Dark mode specific adjustments */
+.dark .sidebar {
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+}
+
+.dark .header {
+    background-color: var(--sidebar-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dark .client-item:hover {
+    background-color: rgba(249, 115, 22, 0.2);
+}
+
+.dark .dropdown-item:hover {
+    background-color: rgba(249, 115, 22, 0.2);
+}
+
+.dark .section {
+    background-color: var(--secondary-bg);
+}
+
+.dark .value {
+    background: rgba(249, 115, 22, 0.15);
+}
+
+.dark table th {
+    background-color: rgba(249, 115, 22, 0.2);
+}
+
+.dark table tr:hover {
+    background-color: rgba(249, 115, 22, 0.1);
+}
+
+.dark .solution-item {
+    background-color: var(--sidebar-bg);
+}
+
+.dark .button-secondary {
+    border-color: var(--accent-color);
+}
+
+.dark .button-secondary:hover {
+    background-color: rgba(249, 115, 22, 0.2);
+}
+
+/* Mermaid diagram adjustments for dark mode */
+.dark .mermaid {
+    background-color: var(--sidebar-bg);
+}
+
+.dark .note {
+    background-color: var(--secondary-bg);
+}
+
+/* Dark mode form elements */
+.dark input, 
+.dark select, 
+.dark textarea {
+    background-color: var(--sidebar-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.dark input:focus, 
+.dark select:focus, 
+.dark textarea:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+    background: var(--sidebar-bg);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+}
+
+/* Logo adjustments for dark mode */
+.dark .logo-container {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Status indicators in dark mode */
+.dark .status-active::after,
+.dark .status-warning::after,
+.dark .status-inactive::after {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}

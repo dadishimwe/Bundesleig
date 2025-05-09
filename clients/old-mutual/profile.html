@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Mutual - Client Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f9fafb;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --accent-color: #f97316; /* Light orange accent color like Claude */
+            --accent-hover: #fb8c3c;
+            --border-color: #e5e7eb;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .dark {
+            --primary-bg: #1a1b1e;
+            --secondary-bg: #262832;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-color: #f97316;
+            --accent-hover: #fb8c3c;
+            --border-color: #374151;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Section styles */
+        .section {
+            background-color: var(--secondary-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px var(--shadow-color);
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        .accent-border {
+            border-color: var(--accent-color) !important;
+        }
+
+        .accent-text {
+            color: var(--accent-color) !important;
+        }
+
+        .accent-bg {
+            background-color: var(--accent-color) !important;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        tr:hover {
+            background-color: rgba(249, 115, 22, 0.05);
+        }
+
+        /* Grid layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .grid-item {
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+
+        .value {
+            padding: 5px;
+            background: rgba(249, 115, 22, 0.05);
+            border-radius: 3px;
+            margin-top: 3px;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--primary-bg);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-6">
+        <!-- Header with client logo -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">Old Mutual Rwanda</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Last updated: May 7, 2025</p>
+            </div>
+            <div class="flex items-center">
+                <img src="/api/placeholder/120/60" alt="Old Mutual Logo" class="h-16">
+                <img src="/api/placeholder/120/60" alt="Zuba Logo" class="h-12 ml-4">
+            </div>
+        </div>
+
+        <!-- Basic Client Information -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">1. Basic Client Information</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <div class="label">Client ID</div>
+                    <div class="value">ZUB-2025-0112</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Client Name</div>
+                    <div class="value">Old Mutual Insurance Rwanda</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Contact Person</div>
+                    <div class="value">Jean Marie Gashonga (IT Manager)</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Email</div>
+                    <div class="value">jgashonga@oldmutualrw.com</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Phone</div>
+                    <div class="value">+250 788 123 456</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Service Address</div>
+                    <div class="value">2 KN 3 Ave, Kigali, Rwanda</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">GPS Coordinates</div>
+                    <div class="value">-1.9472, 30.0598</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zuba Broadband Service Details -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">2. Zuba Broadband Service Details</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <div class="label">Service Plan</div>
+                    <div class="value">Enterprise Performance</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Priority Data</div>
+                    <div class="value">1TB Priority, then Standard</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Contract Start</div>
+                    <div class="value">January 15, 2025</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Contract End</div>
+                    <div class="value">January 14, 2028 (36 months)</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Billing Cycle</div>
+                    <div class="value">Monthly</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Payment Method</div>
+                    <div class="value">Bank Transfer</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Service Status</div>
+                    <div class="value" style="color: green; font-weight: bold;">Active</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Monthly Rate</div>
+                    <div class="value accent-text font-bold">675,000 RWF</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hardware & Installation -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">3. Hardware & Installation</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <div class="label">Gateway Serial Number</div>
+                    <div class="value">ZUBA-ST37F928D5</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Gateway Model</div>
+                    <div class="value">Enterprise Performance</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Router Serial</div>
+                    <div class="value">RT-XR5487A32E</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Installation Date</div>
+                    <div class="value">January 18, 2025</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Installation Type</div>
+                    <div class="value">Roof Mount (Secured)</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Installer</div>
+                    <div class="value">Robert Fogler</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Warranty Status</div>
+                    <div class="value">Active for contract duration</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Obstruction Status</div>
+                    <div class="value">0.1% (Excellent)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Network Architecture -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">4. Network Architecture</h2>
+            <div class="mermaid">
+                graph TD
+                    A[Zuba Gateway] -->|Ethernet| B[Zuba Router]
+                    B --> C[Old Mutual Primary Switch]
+                    C -->| | D[Employee Workstations]
+                    C -->| | E[IP Phones]
+                    C -->| | F[Security Cameras]
+                    C -->| | G[File Servers]
+                    C --> H[Backup Link]
+                    style A fill:#f97316,color:white
+                    style B fill:#555,color:white
+                    style C fill:#666,color:white
+                    style D fill:#2c3e50,color:white
+                    style E fill:#2c3e50,color:white
+                    style F fill:#2c3e50,color:white
+                    style G fill:#2c3e50,color:white
+                    style H fill:#2c3e50,color:white
+                    linkStyle 0 stroke:#f97316,stroke-width:2px
+                    linkStyle 1 stroke:#f97316,stroke-width:2px
+            </div>
+
+            <h3 class="text-lg font-semibold mt-6 mb-3">Connected Devices</h3>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <div class="label">Workstations</div>
+                    <div class="value">42 Devices</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Security Cameras</div>
+                    <div class="value">12 IP Cameras</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">IP Phones</div>
+                    <div class="value">36 Devices</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Servers</div>
+                    <div class="value">4 Servers</div>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold mt-6 mb-3">Performance Metrics</h3>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <div class="label">Avg. Download</div>
+                    <div class="value">185 Mbps</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Avg. Upload</div>
+                    <div class="value">22 Mbps</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Latency</div>
+                    <div class="value">42 ms</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Monthly Data</div>
+                    <div class="value">0.8 TB (80% of Priority)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Usage Chart -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">5. Data Usage (Last 6 Months)</h2>
+            <div id="data-usage-chart" class="h-64 w-full">
+                <!-- Chart will be rendered here -->
+                <svg width="100%" height="100%" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- X and Y axis -->
+                    <line x1="50" y1="250" x2="750" y2="250" stroke="#718096" stroke-width="2" />
+                    <line x1="50" y1="50" x2="50" y2="250" stroke="#718096" stroke-width="2" />
+                    
+                    <!-- X axis labels -->
+                    <text x="85" y="270" text-anchor="middle" fill="#718096">Dec</text>
+                    <text x="202" y="270" text-anchor="middle" fill="#718096">Jan</text>
+                    <text x="319" y="270" text-anchor="middle" fill="#718096">Feb</text>
+                    <text x="436" y="270" text-anchor="middle" fill="#718096">Mar</text>
+                    <text x="553" y="270" text-anchor="middle" fill="#718096">Apr</text>
+                    <text x="670" y="270" text-anchor="middle" fill="#718096">May</text>
+                    
+                    <!-- Y axis labels -->
+                    <text x="40" y="250" text-anchor="end" fill="#718096">0</text>
+                    <text x="40" y="200" text-anchor="end" fill="#718096">0.25</text>
+                    <text x="40" y="150" text-anchor="end" fill="#718096">0.5</text>
+                    <text x="40" y="100" text-anchor="end" fill="#718096">0.75</text>
+                    <text x="40" y="50" text-anchor="end" fill="#718096">1.0</text>
+                    
+                    <!-- Grid lines -->
+                    <line x1="50" y1="200" x2="750" y2="200" stroke="#e2e8f0" stroke-width="1" />
+                    <line x1="50" y1="150" x2="750" y2="150" stroke="#e2e8f0" stroke-width="1" />
+                    <line x1="50" y1="100" x2="750" y2="100" stroke="#e2e8f0" stroke-width="1" />
+                    <line x1="50" y1="50" x2="750" y2="50" stroke="#e2e8f0" stroke-width="1" />
+                    
+                    <!-- Data line -->
+                    <polyline
+                        fill="none"
+                        stroke="#f97316"
+                        stroke-width="3"
+                        points="
+                            85,190
+                            202,170
+                            319,210
+                            436,150
+                            553,130
+                            670,90
+                        "
+                    />
+                    
+                    <!-- Data points -->
+                    <circle cx="85" cy="190" r="5" fill="#f97316" />
+                    <circle cx="202" cy="170" r="5" fill="#f97316" />
+                    <circle cx="319" cy="210" r="5" fill="#f97316" />
+                    <circle cx="436" cy="150" r="5" fill="#f97316" />
+                    <circle cx="553" cy="130" r="5" fill="#f97316" />
+                    <circle cx="670" cy="90" r="5" fill="#f97316" />
+                    
+                    <!-- Title -->
+                    <text x="400" y="30" text-anchor="middle" font-weight="bold" fill="#4a5568">Monthly Data Usage (TB)</text>
+                    
+                    <!-- Usage limit line -->
+                    <line x1="50" y1="150" x2="750" y2="150" stroke="#f97316" stroke-width="2" stroke-dasharray="5,5" />
+                    <text x="760" y="150" text-anchor="start" fill="#f97316">Priority Limit (1 TB)</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Support & Maintenance -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">6. Support & Maintenance</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <div class="label">Last Service Check</div>
+                    <div class="value">May 3, 2025 (Firmware Update)</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Support Tier</div>
+                    <div class="value">Enterprise (4h SLA)</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Support Contact</div>
+                    <div class="value">+250 790 099 777</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Next Scheduled Maintenance</div>
+                    <div class="value">Aug 15, 2025</div>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold mt-6 mb-3">Recent Issues</h3>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Issue</th>
+                    <th>Resolution</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Apr 22, 2025</td>
+                    <td>Intermittent connectivity</td>
+                    <td>Gateway firmware update applied</td>
+                    <td><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Resolved</span></td>
+                </tr>
+                <tr>
+                    <td>Mar 10, 2025</td>
+                    <td>Router configuration issue</td>
+                    <td>Settings optimized for better throughput</td>
+                    <td><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Resolved</span></td>
+                </tr>
+                <tr>
+                    <td>Feb 05, 2025</td>
+                    <td>Power supply fluctuation</td>
+                    <td>Recommended UPS installation</td>
+                    <td><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Resolved</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Notes & Recommendations -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">7. Notes & Recommendations</h2>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 dark:bg-yellow-900 dark:border-yellow-600">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700 dark:text-yellow-200">
+                            <strong>Data Usage Trend:</strong> Client's data usage has been steadily increasing over the past 6 months and is approaching the 1TB limit. Consider proposing an upgrade to the 3TB package.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="list-disc pl-5 space-y-2">
+                <li>Customer requires network stability for insurance transaction processing</li>
+                <li>Potential upsell opportunity: 3TB package at 1,050,000 RWF monthly</li>
+                <li>Corporate VPN access should be maintained at all times</li>
+                <li>Client wishes to be informed 24h before any maintenance activities</li>
+                <li>Network services 45+ staff members during business hours</li>
+            </ul>
+        </div>
+        
+        <!-- Document history -->
+        <div class="mt-8 text-sm text-gray-500 dark:text-gray-400">
+            <p>Document ID: OLD-MUT-PROF-20250507</p>
+            <p>Created by: Robert Fogler | Approved by: Technical Department</p>
+        </div>
+    </div>
+
+    <!-- Initialize Mermaid for diagrams -->
+    <!-- PDF Download Button -->
+    <button id="download-pdf" class="fixed bottom-6 right-6 flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors shadow-md z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
+        </svg>
+        Download as PDF
+    </button>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'neutral',
+            flowchart: { useMaxWidth: true }
+        });
+
+        // PDF Download functionality
+        document.getElementById('download-pdf').addEventListener('click', function() {
+            // Create a clone of the content to be downloaded
+            const content = document.querySelector('.container').cloneNode(true);
+            
+            // Remove the download button from the clone
+            const downloadButton = content.querySelector('#download-pdf');
+            if (downloadButton) {
+                downloadButton.remove();
+            }
+            
+            // Configure PDF options
+            const options = {
+                margin: 10,
+                filename: 'Old-Mutual-Profile.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate PDF
+            html2pdf().set(options).from(content).save();
+        });
+    </script>
+</body>
+</html>

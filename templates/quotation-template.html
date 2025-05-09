@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{CLIENT_NAME}} - Quotation</title>
+    <link href="../lib/tailwind.min.css" rel="stylesheet">
+    <script src="../lib/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f9fafb;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --accent-color: #f97316; /* Light orange accent color like Claude */
+            --accent-hover: #fb8c3c;
+            --border-color: #e5e7eb;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .dark {
+            --primary-bg: #1a1b1e;
+            --secondary-bg: #262832;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-color: #f97316;
+            --accent-hover: #fb8c3c;
+            --border-color: #374151;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Section styles */
+        .section {
+            background-color: var(--secondary-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px var(--shadow-color);
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        .accent-border {
+            border-color: var(--accent-color) !important;
+        }
+
+        .accent-text {
+            color: var(--accent-color) !important;
+        }
+
+        .accent-bg {
+            background-color: var(--accent-color) !important;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            background-color: rgba(249, 115, 22, 0.1);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        th:last-child, td:last-child {
+            text-align: right;
+        }
+
+        tr:hover {
+            background-color: rgba(249, 115, 22, 0.05);
+        }
+
+        /* Option card styles */
+        .option-card {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .option-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .option-card ul {
+            list-style: none;
+        }
+
+        .option-card li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .option-card li:before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Solution item styles */
+        .solution-item {
+            background: var(--primary-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            border-top: 3px solid var(--accent-color);
+        }
+
+        .solution-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Notice section */
+        .notice-section {
+            background: #1a2942;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Section title with accent line */
+        .section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        /* Print styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            body {
+                padding: 0;
+                margin: 0;
+            }
+            
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 15px;
+            }
+            
+            .section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-6">
+        <!-- Header with logos -->
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <img src="../img/logo.svg" alt="ZUBA" class="h-16">
+            <img src="../img/client-logos/{{CLIENT_ID}}.png" alt="{{CLIENT_NAME}} Logo" class="h-16" onerror="this.src='../img/placeholder-logo.png';">
+        </div>
+
+        <!-- Quotation information -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+                <p class="mb-1">ZUBA BROADBAND LTD</p>
+                <p class="mb-1">22 KG 548 STREET</p>
+                <p class="mb-1">KACYIRU, KIGALI</p>
+                <p class="mb-1">0790 099 777</p>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-2">Addressed To:</h3>
+                <p class="mb-1"><b>Company Name:</b> {{CLIENT_FULL_NAME}}</p>
+                <p class="mb-1"><b>Company Address:</b> {{CLIENT_ADDRESS}}</p>
+                <p class="mb-1"><b>Attn:</b> {{CONTACT_PERSON}}</p>
+            </div>
+            <div>
+                <p class="mb-1"><b>No.:</b> {{QUOTATION_NUMBER}}</p>
+                <p class="mb-1"><b>Date:</b> {{QUOTATION_DATE}}</p>
+                <p class="mb-1"><b>Validity:</b> {{VALIDITY_PERIOD}}</p>
+                <p class="mb-1"><b>Sales Manager:</b> {{SALES_MANAGER}}</p>
+                <p class="mb-1"><b>Mobile Number:</b> {{SALES_PHONE}}</p>
+            </div>
+        </div>
+
+        <!-- Title banner -->
+        <div class="bg-gray-800 text-white p-4 rounded-lg mb-6">
+            <p class="font-bold text-center text-lg">ZUBA BROADBAND ENTERPRISE STARLINK QUOTATION</p>
+        </div>
+
+        <!-- Options section -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">Equipment and Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-4">
+                <div class="option-card">
+                    <p class="font-bold mb-2">Enterprise Performance</p>
+                    <p class="mb-4"><strong>Unlimited package, faster speeds and greater reliability than Standard Starlink dishes</strong></p>
+                    <ul class="space-y-2">
+                        <li>All installation, including mounts and cabling.</li>
+                        <li>Site visits to confirm ideal installation method for best performance.</li>
+                        <li>Unlimited monthly data at download speeds of up to 220 Mbps with monthly Priority Data.</li>
+                        <li>Monthly data usage and performance reports and system health checks.</li>
+                        <li>Public IP 24/7 service and maintenance, including replacement of problematic hardware at no cost, for the duration of the contract.</li>
+                        <li>Flexibility to change monthly plans.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solution section -->
+        <div class="section p-6">
+            <h2 class="section-title text-xl font-semibold">Our Solution</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                <div class="solution-item">
+                    <h4>Simple</h4>
+                    <p>No up-front costs: Equipment, installation, maintenance, 24/7 customer care, and Priority Data service plans all included in one monthly price.</p>
+                </div>
+                <div class="solution-item">
+                    <h4>Flexible</h4>
+                    <p>You can change data plans at any time, on a site- or branch-specific basis.</p>
+                </div>
+                <div class="solution-item">
+                    <h4>Measurable</h4>
+                    <p>We provide monthly detailed usage reports and system health checks on request and site-specific basis.</p>
+                </div>
+                <div class="solution-item">
+                    <h4>Available Anywhere</h4>
+                    <p>We can provide service anywhere in and around the Country.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing tables -->
+        <h2 class="section-title text-xl font-semibold mt-8 mb-4">Enterprise Performance - Price per month</h2>
+        <table class="mb-6">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Unit Price ({{CURRENCY}})</th>
+                    <th>Quantity</th>
+                    <th>Total ({{CURRENCY}})</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- PACKAGE_ROWS -->
+                <tr>
+                    <td>{{CLIENT_NAME}}</td>
+                    <td>1 TB Package - Priority</td>
+                    <td>675,000 RWF</td>
+                    <td>1</td>
+                    <td>675,000 RWF</td>
+                </tr>
+                <tr class="bg-gray-50 dark:bg-gray-800">
+                    <td>{{CLIENT_NAME}}</td>
+                    <td>3 TB Package - Priority</td>
+                    <td>1,050,000 RWF</td>
+                    <td>1</td>
+                    <td>1,050,000 RWF</td>
+                </tr>
+                <tr>
+                    <td>{{CLIENT_NAME}}</td>
+                    <td>5 TB Package - Priority</td>
+                    <td>1,350,000 RWF</td>
+                    <td>1</td>
+                    <td>1,350,000 RWF</td>
+                </tr>
+                <!-- END_PACKAGE_ROWS -->
+            </tbody>
+        </table>
+
+        <!-- Notice section -->
+        <div class="notice-section">
+            <h3 class="text-lg font-bold mb-2">NOTICE!</h3>
+            <p>Prices are quoted in {{CURRENCY}}. Payment terms are within 7 days of invoice date.</p>
+        </div>
+
+        <!-- Notes section -->
+        <div class="section p-6 mt-6">
+            <h2 class="section-title text-xl font-semibold">Important Notes</h2>
+            <div class="space-y-3 mt-4">
+                <!-- NOTES_ROWS -->
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md"><b>Note 1:</b> With this package, {{CLIENT_NAME}} can provide optimal internet standards for its customers and operators, and handle all other high-bandwidth tasks.</div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md"><b>Note 2:</b> Additional charges may apply for any extra network installations or other special requirements.</div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md"><b>Note 3:</b> Quote based on a {{CONTRACT_LENGTH}}-month contract.</div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md"><b>Note 4:</b> Customer must ensure stable electrical power supply to the kit using UPS.</div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md"><b>Note 5:</b> Order confirmation requires signed agreement and advance payment.</div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md"><b>Note 6:</b> Prices subject to additional requirements and sales taxes (e.i. VAT).</div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md"><b>Note 7:</b> Additional data usage charged at {{OVERAGE_RATE}} per GB.</div>
+                <!-- END_NOTES_ROWS -->
+            </div>
+        </div>
+
+        <!-- Download and contact info -->
+        <div class="section p-6 mt-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between">
+                <div>
+                    <h2 class="section-title text-xl font-semibold">For More Information</h2>
+                    <p class="mt-4">For any questions regarding this quotation, please contact:</p>
+                    <p class="font-semibold mt-2">{{SALES_MANAGER}}, Sales Manager</p>
+                    <p>Email: {{SALES_EMAIL}}</p>
+                    <p>Phone: {{SALES_PHONE}}</p>
+                </div>
+                <div class="mt-6 sm:mt-0">
+                    <button id="download-pdf" class="flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors no-print">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
+                        </svg>
+                        Download as PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer information -->
+        <div class="mt-8 text-sm text-gray-500 dark:text-gray-400">
+            <p>Quotation Reference: {{QUOTATION_REFERENCE}}</p>
+            <p>Zuba Broadband Ltd | 22 KG 548 Street, Kacyiru, Kigali | info@zubabroadband.com</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // PDF Download functionality
+            document.getElementById('download-pdf').addEventListener('click', function() {
+                // Create a clone of the content to be downloaded
+                const content = document.querySelector('.container').cloneNode(true);
+                
+                // Remove the download button from the clone
+                const downloadButton = content.querySelector('#download-pdf');
+                if (downloadButton) {
+                    downloadButton.parentElement.parentElement.remove();
+                }
+                
+                // Configure PDF options
+                const options = {
+                    margin: 10,
+                    filename: '{{CLIENT_ID}}-Quotation.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                
+                // Generate PDF
+                html2pdf().set(options).from(content).save();
+            });
+        });
+    </script>
+</body>
+</html>

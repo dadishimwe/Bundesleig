@@ -1,0 +1,534 @@
+/**
+ * Zuba Broadband Client Management System
+ * Fixed Main Stylesheet with Improved Responsiveness
+ */
+
+ :root {
+    /* Base colors */
+    --primary-bg: #ffffff;
+    --secondary-bg: #f9fafb;
+    --sidebar-bg: #f2f3f5;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #f97316; /* Light orange accent color like Claude */
+    --accent-hover: #fb8c3c;
+    --border-color: #e5e7eb;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    
+    /* Status colors */
+    --status-active: #10b981;
+    --status-warning: #f59e0b;
+    --status-inactive: #ef4444;
+    
+    /* Typography */
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    
+    /* Spacing */
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-6: 1.5rem;
+    --spacing-8: 2rem;
+    --spacing-10: 2.5rem;
+    --spacing-12: 3rem;
+    
+    /* Layout */
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 0;
+    --header-height: 64px;
+    --border-radius: 0.5rem;
+    
+    /* Logo colors */
+    --logo-primary: #f97316;
+    --logo-secondary: #1e293b;
+}
+
+/* Base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+/* Layout */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-4);
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+    z-index: 50;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    left: 0;
+    top: 0;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+.content {
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+    width: calc(100% - var(--sidebar-width));
+}
+
+.content.expanded {
+    margin-left: 0;
+    width: 100%;
+}
+
+/* Client list and navigation */
+.client-list {
+    max-height: calc(100vh - var(--header-height) - var(--spacing-12));
+    overflow-y: auto;
+}
+
+.client-item {
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    padding: var(--spacing-3) var(--spacing-4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.client-item:hover {
+    background-color: rgba(249, 115, 22, 0.1);
+    border-left: 3px solid var(--accent-color);
+}
+
+.client-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.client-dropdown.active {
+    max-height: 200px;
+}
+
+.dropdown-item {
+    padding-left: 2.5rem;
+    padding: var(--spacing-2) var(--spacing-4) var(--spacing-2) 2.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(249, 115, 22, 0.1);
+}
+
+/* Toggle button */
+.toggle-btn {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.toggle-btn.rotated {
+    transform: rotate(180deg);
+}
+
+/* Status indicators */
+.status-active {
+    position: relative;
+}
+
+.status-active::after {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--status-active);
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+.status-warning {
+    position: relative;
+}
+
+.status-warning::after {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--status-warning);
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+.status-inactive {
+    position: relative;
+}
+
+.status-inactive::after {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--status-inactive);
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+/* Section styles */
+.section {
+    background-color: var(--secondary-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px var(--shadow-color);
+    margin-bottom: var(--spacing-6);
+    transition: box-shadow 0.2s;
+    padding: var(--spacing-6);
+}
+
+.section:hover {
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+/* Section title with accent line */
+.section-title {
+    position: relative;
+    padding-bottom: var(--spacing-2);
+    margin-bottom: var(--spacing-4);
+}
+
+.section-title:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+}
+
+/* Accent elements */
+.accent-border {
+    border-color: var(--accent-color) !important;
+}
+
+.accent-text {
+    color: var(--accent-color) !important;
+}
+
+.accent-bg {
+    background-color: var(--accent-color) !important;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+tr:hover {
+    background-color: rgba(249, 115, 22, 0.05);
+}
+
+/* Grid layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.grid-item {
+    margin-bottom: 10px;
+}
+
+.label {
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+.value {
+    padding: 5px;
+    background: rgba(249, 115, 22, 0.05);
+    border-radius: 3px;
+    margin-top: 3px;
+}
+
+/* Logo container */
+.logo-container {
+    background: linear-gradient(135deg, var(--logo-primary), var(--accent-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 3px;
+}
+
+/* Frame for client content */
+.client-frame {
+    height: calc(100vh - var(--header-height));
+    width: 100%;
+    border: none;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 1024px) {
+    .sidebar {
+        /* Completely off-screen by default on smaller screens */
+        transform: translateX(-100%);
+    }
+    
+    .content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .grid-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .section {
+        padding: var(--spacing-4);
+    }
+    
+    .dashboard-content .grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 640px) {
+    .section {
+        padding: var(--spacing-3);
+    }
+    
+    .header {
+        padding: 0.5rem;
+    }
+    
+    .page-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .content-area {
+        padding: 0.5rem;
+    }
+}
+
+/* Header styles */
+.header {
+    background-color: var(--primary-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+/* Button styles */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+    cursor: pointer;
+}
+
+.button-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.button-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.button-secondary {
+    background-color: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+}
+
+.button-secondary:hover {
+    background-color: rgba(249, 115, 22, 0.1);
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 15px;
+    }
+    
+    .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+/* Utility classes */
+.hidden {
+    display: none;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.p-4 {
+    padding: var(--spacing-4);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Fix for the sidebar on smaller screens */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 45;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Make sure sidebar is visible when expanded */
+.sidebar.expanded {
+    transform: translateX(0);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure dropdown menus work correctly */
+.client-dropdown {
+    transition: max-height 0.3s ease;
+}
